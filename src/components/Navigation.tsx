@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 
-const menuItems = [
+export const menuItems = [
 	{ name: 'Home', route: '/' },
 	{ name: 'AI Art', route: '/art' },
 	{ name: 'AI Writing', route: '/writing' },
