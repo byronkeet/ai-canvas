@@ -20,7 +20,7 @@ const Navigation = () => {
 		<nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
 			<div className="container flex flex-wrap items-center justify-between mx-auto">
 				<Link href="/" className="flex items-center">
-					<Image src="/logo.png" className="w-auto h-6 mr-3 sm:h-9" alt="Flowbite Logo" width={40} height={40}/>
+					<Image src="/logo.png" className="w-auto h-6 mr-3 sm:h-9" alt="Artificality Logo" width={40} height={40}/>
 					<span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white uppercase font-display">Artificality</span>
 				</Link>
 				<button data-collapse-toggle="navbar-default" type="button" className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
