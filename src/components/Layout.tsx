@@ -9,7 +9,7 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
 	return (
-		<div className='layout'>
+		<div className='flex flex-col flex-nowrap justify-between relative h-screen'>
 			<Head>
 				<title>AI CANVAS</title>
 				<meta name="description" content="AI CANVAS" />
