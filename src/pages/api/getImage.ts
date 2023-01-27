@@ -32,8 +32,11 @@ const getImage = async (req: NextApiRequest, res: NextApiResponse) => {
 		const response = await fetch(`https://api.openai.com/v1/images/generations`, options);
 		const data = await response.json() as GetImageData;
 
+		// data.created: number
+		//data.data: { url: string}[]
+
 		res.status(200);
-		res.json({ data });
+		res.json(data.data);
 	} catch (err) {
 		console.error(err);
 		res.status(500);
