@@ -18,7 +18,7 @@ const Layout = ({ children }: LayoutProps) => {
 			<header>
 				<Navigation />
 			</header>
-			<main className=''>
+			<main className='flex-1 relative'>
 				{children}
 			</main>
 			<footer>
