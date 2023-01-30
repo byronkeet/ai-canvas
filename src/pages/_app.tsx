@@ -1,15 +1,19 @@
-import { type AppType } from "next/dist/shared/lib/utils";
 import 'flowbite';
+import { SessionProvider } from "next-auth/react";
+import type { Session } from "next-auth";
+import type { AppProps } from "next/app";
 
 import Layout from "../components/Layout";
 
 import "../styles/globals.css";
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps<{ session: Session; }>) => {
 	return (
-		<Layout>
-			<Component {...pageProps} />
-		</Layout>
+		<SessionProvider session={session}>
+			<Layout>
+				<Component {...pageProps} />
+			</Layout>
+		</SessionProvider>
 	);
 };
 
