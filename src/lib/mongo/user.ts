@@ -37,7 +37,6 @@ const init = async () => {
 	if (db) return;
 	try {
 		client = await clientPromise;
-		console.log(client);
 		db = client.db(process.env.DB_NAME);
 		users =  db.collection(process.env.USERS_COLLECTION_NAME as string);
 	} catch (error) {
@@ -50,11 +49,11 @@ init()
 .catch(console.error);
 
 
-export const getUser = async () => {
+export const getUser = async (id: string) => {
 	try {
 		if (!users) await init();
 		const result = await users
-		.find({ _id: new OI("63d28074cb6e66aebb69395e") })
+		.find({ _id: new OI(id) })
 		.toArray() as User[];
 
 		return { user: result };
