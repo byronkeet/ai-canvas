@@ -45,16 +45,22 @@ const init = async () => {
 };
 
 init()
-.then(value => console.log(value))
 .catch(console.error);
 
 
-export const getUser = async (id: string) => {
+export const getUser = async (id = '', email = '') => {
 	try {
 		if (!users) await init();
-		const result = await users
-		.find({ _id: new OI(id) })
-		.toArray() as User[];
+		let result: User[];
+		if (id !== '') {
+			result = await users
+			.find({ _id: new OI(id) })
+			.toArray() as User[];
+		} else {
+			result = await users
+			.find({ email })
+			.toArray() as User[];
+		}
 
 		return { user: result };
 	} catch (error) {

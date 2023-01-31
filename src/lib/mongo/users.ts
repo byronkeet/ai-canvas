@@ -44,7 +44,6 @@ const init = async () => {
 };
 
 init()
-.then(value => console.log(value))
 .catch(console.error);
 
 
