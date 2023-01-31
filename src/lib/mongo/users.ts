@@ -36,7 +36,6 @@ const init = async () => {
 	if (db) return;
 	try {
 		client = await clientPromise;
-		console.log(client);
 		db = client.db(process.env.DB_NAME);
 		users =  db.collection(process.env.USERS_COLLECTION_NAME as string);
 	} catch (error) {
