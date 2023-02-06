@@ -1,9 +1,10 @@
-import { unstable_getServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const restricted = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await unstable_getServerSession(req, res, authOptions)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const session = await getServerSession(req, res, authOptions)
   if (session) {
     res.send({
       content:
