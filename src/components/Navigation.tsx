@@ -45,7 +45,7 @@ const Navigation = () => {
 							</li>
 							<li>
 								{/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-								<Link onClick={() => signOut()}  href='/' className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</Link>
+								<Link onClick={() => signOut({ callbackUrl: `${window.location.origin}` })}  href='/' className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</Link>
 							</li>
 						</ul>
 					</div>
