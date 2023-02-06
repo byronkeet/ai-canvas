@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import EmailProvider from "next-auth/providers/email";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
@@ -35,5 +35,13 @@ export const authOptions = {
 				from: EMAIL_FROM
 		}),
 	],
+	callbacks: {
+		session: async ({ session, user, token }) => {
+			if (session?.user) {
+				session.user.id = user.id;
+			}
+			return session;
+		},
+	},
 }
 export default NextAuth(authOptions)
