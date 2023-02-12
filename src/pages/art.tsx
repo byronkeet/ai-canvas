@@ -1,14 +1,17 @@
 import { type NextPage } from "next";
 import { useRef, useState} from 'react';
-import Image from "next/image";
 import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router'
 
 import Spinner from "../components/Spinner";
 
 const Art: NextPage = () => {
 	const ref = useRef<HTMLInputElement>(null);
-	const [images, setImages] = useState<{ url: string }[]>([]);
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(true)
+
+	const router = useRouter();
+
 	const { data: session, status } = useSession();
 
 	const generateImage = (prompt: string) => {
@@ -28,12 +31,10 @@ const Art: NextPage = () => {
 			})
 		}
 
-		fetch('/api/getImage', requestOptions)
+		fetch('/api/art/getImage', requestOptions)
 		.then(response => response.json())
 		.then((data: { url: string }[]) => {
-			setImages(data);
 			handleInsertArtPrompt(prompt, data.map(image => image.url));
-			setLoading(false);
 		})
 		.catch(err => {
 			setLoading(false);
@@ -54,8 +55,11 @@ const Art: NextPage = () => {
 
 		fetch('/api/insertArtPrompt', requestOptions)
 		.then(response => response.json())
-		.then((data) => {
-			console.log(data);
+		.then((data: { artPrompt: { acknowledged: boolean; insertedId: string } }) => {
+			setLoading(false);
+			if (data.artPrompt.insertedId !== undefined || data.artPrompt.insertedId !== '') {
+				router.push(`/art/${data.artPrompt.insertedId}`).catch(err => console.error(err));
+			}
 		})
 		.catch(err => {
 			console.error(err)
@@ -72,10 +76,6 @@ const Art: NextPage = () => {
 		generateImage(ref.current?.value || '');
 	}
 
-	const handleSelectedImage = (url: string) => {
-		setSelectedImage(url);
-		setIsOpen(true);
-	}
 
 	return (
 		<div className="container mx-auto p-3 relative w-full h-full">
@@ -93,15 +93,15 @@ const Art: NextPage = () => {
 				</button>
 				)}
 			</div>
-			<div className='grid grid-cols-2 lg:grid-cols-4 gap-3 my-10 md:my-20' >
-				{Object.keys(images).length !== 0 && 
-				images.map(image => (
-					<div key={Math.floor(Math.random()*1000)}  className="aspect-square bg-gray-50 w-full h-full cursor-pointer">
-						<Image onClick={() => handleSelectedImage(image.url)}   src={image.url} alt='generated image' width={1024} height={1024} className="w-full h-full object-contain"/>
+			{error && (
+				<div className="flex flex-col justify-center items-center mt-20 container">
+					<div className="flex justify-center items-center w-7 h-7 rounded-full bg-rose-500 text-white">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M7 3.5a1 1 0 0 1 2 0v5a1 1 0 0 1-2 0ZM8 11a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 8 11Z" fill="currentColor"></path></svg>
 					</div>
-				))
-				}
-			</div>
+					<p className="">The requested page was not found.</p>
+					<p className="">Please check that the URL is valid.</p>
+				</div>
+			)}
 		</div>
 	);
 };
