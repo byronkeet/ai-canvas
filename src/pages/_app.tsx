@@ -2,6 +2,7 @@ import 'flowbite';
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 import type { AppProps } from "next/app";
+import { wrapper } from '../store/store';
 
 import Layout from "../components/Layout";
 
@@ -17,4 +18,4 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps<{ s
 	);
 };
 
-export default MyApp;
+export default wrapper.withRedux(MyApp);
