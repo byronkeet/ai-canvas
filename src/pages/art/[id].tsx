@@ -3,11 +3,15 @@ import { useRef, useState, useEffect } from 'react';
 import Image from "next/image";
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router'
+import { useDispatch } from "react-redux";
 
 import Spinner from "../../components/Spinner";
 import ImageOverlay from "../../components/ImageOverlay";
+import { setArtPromptErrorState } from "../../store/artPromptErrorSlice";
+
 
 const Art: NextPage = () => {
+  	const dispatch = useDispatch();
 	const ref = useRef<HTMLInputElement>(null);
 	const [images, setImages] = useState<{ url: string }[]>([]);
 	const [loading, setLoading] = useState(false);
@@ -98,10 +102,12 @@ const Art: NextPage = () => {
 			fetch(`/api/getArtPromptById/${idString}`)
 			.then(response => response.json())
 			.then((data: { prompt: string; images: string[]; error?: string }) => {
-				console.log(data);
+				console.log(data.error);
 				if (data.error) {
+					dispatch(setArtPromptErrorState(true))
 					throw new Error(data.error);
 				}
+				dispatch(setArtPromptErrorState(false))
 				setImages(data.images.map(image => ({ url: image })));
 				if (ref.current) {
 					ref.current.value = data.prompt;
