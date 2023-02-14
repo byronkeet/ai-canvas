@@ -2,13 +2,15 @@ import { type NextPage } from "next";
 import { useRef, useState} from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router'
+import { useSelector } from "react-redux";
 
 import Spinner from "../components/Spinner";
+import { selectArtPromptErrorState } from "../store/artPromptErrorSlice";
 
 const Art: NextPage = () => {
+	const artPromptErrorState = useSelector(selectArtPromptErrorState);
 	const ref = useRef<HTMLInputElement>(null);
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(true)
 
 	const router = useRouter();
 
@@ -93,7 +95,7 @@ const Art: NextPage = () => {
 				</button>
 				)}
 			</div>
-			{error && (
+			{artPromptErrorState && (
 				<div className="flex flex-col justify-center items-center mt-20 container">
 					<div className="flex justify-center items-center w-7 h-7 rounded-full bg-rose-500 text-white">
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M7 3.5a1 1 0 0 1 2 0v5a1 1 0 0 1-2 0ZM8 11a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 8 11Z" fill="currentColor"></path></svg>
