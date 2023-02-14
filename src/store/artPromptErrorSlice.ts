@@ -1,3 +1,4 @@
+// todo: fix typing in this file (affects [id].tsx)
 import { createSlice } from "@reduxjs/toolkit";
 import type { AnyAction } from "@reduxjs/toolkit";
 import type { AppState } from "./store";
