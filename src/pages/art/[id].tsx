@@ -102,7 +102,6 @@ const Art: NextPage = () => {
 			fetch(`/api/getArtPromptById/${idString}`)
 			.then(response => response.json())
 			.then((data: { prompt: string; images: string[]; error?: string }) => {
-				console.log(data.error);
 				if (data.error) {
 					dispatch(setArtPromptErrorState(true))
 					throw new Error(data.error);
@@ -119,7 +118,7 @@ const Art: NextPage = () => {
 			})
 			;
 		}
-	}, [id, router]);
+	}, [id, router, dispatch]);
 
 	return (
 		<div className="container mx-auto p-3 relative w-full h-full">
