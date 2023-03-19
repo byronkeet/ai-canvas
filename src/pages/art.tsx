@@ -50,7 +50,7 @@ const Art: NextPage = () => {
 	const handleUploadImageToGCS = (url: string): Promise<string> => {
 		// Wrap the function body in a new promise and resolve with the publicUrl.
 		return new Promise((resolve, reject) => {
-			fetch('/api/downloadImage', {
+			fetch('/api/uploadImageToGCS', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -59,18 +59,7 @@ const Art: NextPage = () => {
 			})
 				.then((res) => res.json())
 				.then((data) => {
-					fetch('/api/uploadImage', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-						body: JSON.stringify({ fileName: data.fileName }),
-					})
-						.then((response) => response.json())
-						.then((data) => {
-							resolve(data.publicUrl);
-						})
-						.catch((err) => reject(err));
+					resolve(data.publicUrl);
 				})
 				.catch((err) => reject(err));
 		});
