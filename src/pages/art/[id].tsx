@@ -39,18 +39,39 @@ const Art: NextPage = () => {
 				size: '1024x1024'
 			})
 		}
-
+		
 		fetch('/api/art/getImage', requestOptions)
 		.then(response => response.json())
-		.then((data: { url: string }[]) => {
-			setImages(data);
-			handleInsertArtPrompt(prompt, data.map(image => image.url));
+		.then( async (data: { url: string }[]) => {
+			const urls = await Promise.all(data.map( (image) => {
+				return handleUploadImageToGCS(image.url);
+			}));
+			handleInsertArtPrompt(prompt, urls);
 		})
 		.catch(err => {
 			setLoading(false);
 			console.error(err)
 		});
 	}
+
+	const handleUploadImageToGCS = (url: string): Promise<string> => {
+		// Wrap the function body in a new promise and resolve with the publicUrl.
+		return new Promise((resolve, reject) => {
+			fetch('/api/uploadImageToGCS', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ url }),
+			})
+				.then((res) => res.json())
+				.then((data: { publicUrl: string }) => {
+					resolve(data.publicUrl);
+				})
+				.catch((err) => reject(err));
+		});
+	};
+
 
 	const handleInsertArtPrompt = (prompt: string, images: string[] ) => {
 		const requestOptions = {
@@ -103,10 +124,14 @@ const Art: NextPage = () => {
 			.then(response => response.json())
 			.then((data: { prompt: string; images: string[]; error?: string }) => {
 				if (data.error) {
-					dispatch(setArtPromptErrorState(true))
+					if (setArtPromptErrorState) {
+						dispatch(setArtPromptErrorState(true))
+					}
 					throw new Error(data.error);
 				}
-				dispatch(setArtPromptErrorState(false))
+				if (setArtPromptErrorState) {
+					dispatch(setArtPromptErrorState(false))
+				}
 				setImages(data.images.map(image => ({ url: image })));
 				if (ref.current) {
 					ref.current.value = data.prompt;
