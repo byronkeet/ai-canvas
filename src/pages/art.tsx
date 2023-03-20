@@ -58,7 +58,7 @@ const Art: NextPage = () => {
 				body: JSON.stringify({ url }),
 			})
 				.then((res) => res.json())
-				.then((data) => {
+				.then((data: { publicUrl: string }) => {
 					resolve(data.publicUrl);
 				})
 				.catch((err) => reject(err));
