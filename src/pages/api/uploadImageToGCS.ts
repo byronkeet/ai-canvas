@@ -35,7 +35,7 @@ export default function handler(
 	const { url } = body;
 	console.log(url);
 
-	const fileName = Date.now().toString() + '.jpeg';
+	const fileName = Math.floor(Math.random() * 1000000).toString() + '-' + Date.now().toString() + '.jpeg';
 
 	const bucket = storage.bucket(process.env.NEXT_PUBLIC_BUCKET_NAME as string);
 
@@ -52,6 +52,7 @@ export default function handler(
 		res.status(500).json({ message: "File upload error: " + err.message });
 	  });
 	  stream.on('finish', () => {
+		console.log(`https://storage.googleapis.com/${process.env.NEXT_PUBLIC_BUCKET_NAME as string}/${fileName}`);
 		res.status(200).json({ message: "File upload complete", publicUrl: `https://storage.googleapis.com/${process.env.NEXT_PUBLIC_BUCKET_NAME as string}/${fileName}` });
 	});
 	  
