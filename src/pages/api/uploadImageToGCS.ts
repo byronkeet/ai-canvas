@@ -11,26 +11,31 @@ const storage = new Storage({
 	projectId: GCLOUD_PROJECT_ID,
 });
 
+interface ExtendedNextApiRequest extends NextApiRequest {
+	body: { url: string } | string;
+  }
+
 
 export default function handler(
-    req: NextApiRequest,
+    req: ExtendedNextApiRequest,
     res: NextApiResponse
 ) {
     if (req.method !== "POST") {
-        res.status(400).send(`Invalid method: ${req.method}`);
+        res.status(400).send(`Invalid method: ${req.method || 'undefined'}`);
         return;
     }
 	
-	let body;
+	let body: { url: string };
 	if (typeof req.body === 'string') {
-		body = JSON.parse(req.body);
+		body = JSON.parse(req.body) as { url: string };
 	} else {
 		body = req.body;
 	}
 
-	const { url } = body as { url: string };
+	const { url } = body;
+	console.log(url);
 
-	const fileName = Date.now() + '.jpeg';
+	const fileName = Date.now().toString() + '.jpeg';
 
 	const bucket = storage.bucket(process.env.NEXT_PUBLIC_BUCKET_NAME as string);
 
@@ -46,7 +51,7 @@ export default function handler(
 		console.error(err);
 		res.status(500).json({ message: "File upload error: " + err.message });
 	  });
-	  stream.on('finish', async () => {
+	  stream.on('finish', () => {
 		res.status(200).json({ message: "File upload complete", publicUrl: `https://storage.googleapis.com/${process.env.NEXT_PUBLIC_BUCKET_NAME as string}/${fileName}` });
 	});
 	  
