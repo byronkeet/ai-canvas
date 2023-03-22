@@ -1,6 +1,6 @@
 // todo: fix typing in this file (affects [id].tsx)
 import { createSlice } from "@reduxjs/toolkit";
-import type { AnyAction } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 import type { AppState } from "./store";
 import { HYDRATE } from "next-redux-wrapper";
 
@@ -20,13 +20,13 @@ export const artPromptErrorSlice = createSlice({
 	initialState,
 	reducers: {
 		// Action to set the authentication status
-		setArtPromptErrorState(state, action: AnyAction) {
+		setArtPromptErrorState: (state, action: PayloadAction<boolean>) => {
 			state.error = action.payload;
 		},
 
 		// Special reducer for hydrating the state. Special case for next-redux-wrapper
 		extraReducers: {
-			[HYDRATE]: (state, action) => {
+			[HYDRATE]: (state: ArtPromptErrorState, action: { payload: { artPromptError: ArtPromptErrorState; }; }) => {
 			return {
 				...state,
 				...action.payload.artPromptError,
