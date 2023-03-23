@@ -26,6 +26,8 @@ export const artPromptErrorSlice = createSlice({
 
 		// Special reducer for hydrating the state. Special case for next-redux-wrapper
 		extraReducers: {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			[HYDRATE]: (state: ArtPromptErrorState, action: { payload: { artPromptError: ArtPromptErrorState; }; }) => {
 			return {
 				...state,
