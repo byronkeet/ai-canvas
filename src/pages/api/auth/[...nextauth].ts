@@ -1,9 +1,17 @@
 import NextAuth from "next-auth";
+import type {JWT} from "next-auth/jwt";
+import type { Session, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import EmailProvider from "next-auth/providers/email";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 
 import clientPromise from "../../../lib/mongo";
+
+interface SessionProps {
+	session: Session;
+	user: User;
+	token: JWT;
+}
 
 const {
 	GOOGLE_CLIENT_ID = '',
@@ -36,7 +44,8 @@ export const authOptions = {
 		}),
 	],
 	callbacks: {
-		session: async ({ session, user, token }) => {
+		session: (params: SessionProps ) => {
+			const { session, user } = params;
 			if (session?.user) {
 				session.user.id = user.id;
 			}
