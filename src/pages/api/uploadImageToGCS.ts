@@ -1,10 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from 'request';
 import { Storage } from "@google-cloud/storage";
+import fs from 'fs';
 
 const GCLOUD_PROJECT_ID = process.env.PROJECT_ID as string;
 
 const GCLOUD_PROJECT_KEYFILE = process.env.BUCKET_KEYFILE as string
+
+if (!fs.existsSync(GCLOUD_PROJECT_KEYFILE)) {
+	// write the keyfile to disk
+	fs.writeFileSync(GCLOUD_PROJECT_KEYFILE, process.env.BUCKET_KEYFILE_CONTENT as string);
+}
 
 const storage = new Storage({
     keyFilename: GCLOUD_PROJECT_KEYFILE,
@@ -13,7 +19,7 @@ const storage = new Storage({
 
 interface ExtendedNextApiRequest extends NextApiRequest {
 	body: { url: string } | string;
-  }
+}
 
 
 export default function handler(
