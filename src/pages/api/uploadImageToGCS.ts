@@ -9,8 +9,13 @@ interface CredentialBody {
     private_key?: string;
 }
 
+const credentials: CredentialBody = {
+	client_email: process.env.CLIENT_EMAIL,
+	private_key: process.env.PRIVATE_KEY,
+};
+
 const storage = new Storage({
-    credentials: JSON.parse(process.env.BUCKET_KEYFILE_CONTENT as string) as CredentialBody,
+    credentials,
 	projectId: GCLOUD_PROJECT_ID,
 });
 
