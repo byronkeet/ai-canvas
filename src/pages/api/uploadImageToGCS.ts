@@ -27,16 +27,8 @@ export default function handler(
         res.status(400).send(`Invalid method: ${req.method || 'undefined'}`);
         return;
     }
-	
-	let body: { url: string };
-	if (typeof req.body === 'string') {
-		body = JSON.parse(req.body) as { url: string };
-	} else {
-		body = req.body;
-	}
 
-	const { url } = body;
-	console.log(url);
+	const { url } = req.body as { url: string };
 
 	const fileName = Math.floor(Math.random() * 1000000).toString() + '-' + Date.now().toString() + '.jpeg';
 
