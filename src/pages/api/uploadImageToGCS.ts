@@ -1,19 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import request from 'request';
 import { Storage } from "@google-cloud/storage";
-import fs from 'fs';
 
 const GCLOUD_PROJECT_ID = process.env.PROJECT_ID as string;
 
-const GCLOUD_PROJECT_KEYFILE = process.env.BUCKET_KEYFILE as string
-
-if (!fs.existsSync(GCLOUD_PROJECT_KEYFILE)) {
-	// write the keyfile to disk
-	fs.writeFileSync(GCLOUD_PROJECT_KEYFILE, process.env.BUCKET_KEYFILE_CONTENT as string);
+interface CredentialBody {
+    client_email?: string;
+    private_key?: string;
 }
 
 const storage = new Storage({
-    keyFilename: GCLOUD_PROJECT_KEYFILE,
+    credentials: JSON.parse(process.env.BUCKET_KEYFILE_CONTENT as string) as CredentialBody,
 	projectId: GCLOUD_PROJECT_ID,
 });
 
