@@ -11,7 +11,7 @@ interface CredentialBody {
 
 const credentials: CredentialBody = {
 	client_email: process.env.CLIENT_EMAIL,
-	private_key: process.env.PRIVATE_KEY,
+	private_key: process.env.PRIVATE_KEY ? process.env.PRIVATE_KEY.split(String.raw`\n`).join('\n') : '',
 };
 
 const storage = new Storage({
