@@ -8,9 +8,9 @@ const getUserById = async (req: NextApiRequest, res: NextApiResponse) => {
 		if (!id) return res.status(400).json({ error: 'Missing id' });
 		if (typeof id !== 'string') return res.status(400).json({ error: 'Invalid id' });
 		try {
-			const { user, error } = await getUser(id);
-			if (error) return res.status(500).json({ error });
-			return res.status(200).json({ user });
+			const data = await getUser(id);
+			if (data instanceof Error) return res.status(500).json({ error: data });
+			return res.status(200).json({ user: data });
 		} catch (error) {
 			return res.status(500).json({ error });
 		}

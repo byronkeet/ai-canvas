@@ -1,20 +1,46 @@
 import { type NextPage } from "next";
-import { useRef, useState} from 'react';
+import { useEffect, useRef, useState} from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router'
 import { useSelector } from "react-redux";
 
 import Spinner from "../components/Spinner";
 import { selectArtPromptErrorState } from "../store/artPromptErrorSlice";
+import { type User } from '../lib/mongo/user';
+import Link from "next/link";
 
 const Art: NextPage = () => {
 	const artPromptErrorState = useSelector(selectArtPromptErrorState);
 	const ref = useRef<HTMLInputElement>(null);
 	const [loading, setLoading] = useState(false);
+	const [isActive, setIsActive] = useState(false);
 
 	const router = useRouter();
 
 	const { data: session, status } = useSession();
+	useEffect(() => {
+		if (session === null || session === undefined) {
+			return;
+		}
+		if (session.user === undefined) {
+			return;
+		}
+		fetch(`/api/getUser/${session.user.id}`)
+		.then(response => response.json())
+		.then((user: { user: User[] }) => {
+
+			if(!user.user[0]) {
+				return;
+			}
+			if (user.user[0].isActive) {
+				setIsActive(true) 
+			} else {
+				setIsActive(false)
+			}
+		
+		})
+		.catch(error => {console.log(error)});
+	},[session])
 
 	const generateImage = (prompt: string) => {
 		if (status === 'unauthenticated') {
@@ -111,7 +137,14 @@ const Art: NextPage = () => {
 					Sign In
 				</button>
 				)}
-				{status === 'authenticated' && (
+				{status === 'authenticated' && !isActive &&(
+				<Link href="/subscriptions">
+					<button type="button" onClick={handleGetImage} className="pointer text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+						Set up Subscription
+					</button>
+				</Link>
+				)}
+				{status === 'authenticated' && isActive && (
 				<button type="button" onClick={handleGetImage} className="pointer text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
 					{ loading ? <Spinner /> : 'Generate' }
 				</button>

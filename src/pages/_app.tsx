@@ -5,6 +5,12 @@ import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { wrapper } from '../store/store';
 import { Analytics } from '@vercel/analytics/react';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
+
+
 
 import Layout from "../components/Layout";
 
@@ -17,7 +23,9 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps<{ s
 		<Provider store={store}>
 			<SessionProvider session={session}>
 				<Layout>
-					<Component {...pageProps} />
+					<Elements stripe={stripePromise}>
+						<Component {...pageProps} />
+					</Elements>
 				</Layout>
 			</SessionProvider>
 		</Provider>

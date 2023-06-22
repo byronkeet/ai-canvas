@@ -36,7 +36,7 @@ export const insertArtPrompt = async (artPrompt: ArtPrompt) => {
 		if (!artPrompts) await init();
 
 		const result = await artPrompts.insertOne( artPrompt );
-		console.log(result);
+		console.log('result insertArtPrompt.ts 39 :', result);
 		return { artPrompt: result };
 	} catch (error) {
 		console.error(error);

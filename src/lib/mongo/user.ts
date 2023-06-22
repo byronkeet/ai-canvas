@@ -2,7 +2,7 @@ import type { Db, Collection, MongoClient, ObjectId } from "mongodb";
 import { ObjectId as OI } from "mongodb";
 import clientPromise from ".";
 
-interface User {
+export interface User {
 	_id: ObjectId;
 	email: string;
 	username: string;
@@ -26,7 +26,9 @@ interface User {
 		name: string;
 		art: string[];
 		chat: string[];
-	}[]
+	}[];
+	stripeId: string | undefined;
+	isActive: boolean | undefined;
 }
 
 let client: MongoClient;
@@ -48,7 +50,7 @@ init()
 .catch(console.error);
 
 
-export const getUser = async (id = '', email = '') => {
+export const getUser = async (id = '', email = ''): Promise<User[] | Error>  => {
 	try {
 		if (!users) await init();
 		let result: User[];
@@ -62,9 +64,9 @@ export const getUser = async (id = '', email = '') => {
 			.toArray() as User[];
 		}
 
-		return { user: result };
+		return result;
 	} catch (error) {
 		console.error(error);
-		return { error: 'Failed to fetch user' };
+		return error as Error;
 	}
 }

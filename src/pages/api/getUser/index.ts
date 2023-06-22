@@ -6,9 +6,9 @@ const getUserByEmail = async (req: NextApiRequest, res: NextApiResponse) => {
 	if (req.method === "GET") {
 		const { email } = req.body as { email: string };
 		try {
-			const { user, error } = await getUser('', email);
-			if (error) return res.status(500).json({ error });
-			return res.status(200).json({ user });
+			const data = await getUser('', email);
+			if (data instanceof Error) return res.status(500).json({ error: data });
+			return res.status(200).json({ user: data });
 		} catch (error) {
 			return res.status(500).json({ error });
 		}

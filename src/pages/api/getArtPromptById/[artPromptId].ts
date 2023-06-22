@@ -10,7 +10,7 @@ const getArtPromptById = async (req: NextApiRequest, res: NextApiResponse) => {
 		try {
 			const { artPrompt, error } = await getArtPrompt(artPromptId);
 			if (error) return res.status(500).json({ error });
-			console.log(artPrompt);
+			console.log('artPrompt [artPromptId].ts 13 :', artPrompt);
 			if (!artPrompt) return res.status(404).json({ error: 'No art prompt found' });
 			const data = {
 				images: artPrompt.images,
